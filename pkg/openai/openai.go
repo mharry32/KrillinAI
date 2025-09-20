@@ -22,7 +22,10 @@ func (c *Client) ChatCompletion(query string) (string, error) {
 		Messages: []openai.ChatCompletionMessage{
 			{
 				Role:    openai.ChatMessageRoleSystem,
-				Content: "You are an assistant that helps with subtitle translation.",
+				Content: `You are a professional translator specializing in video subtitles for the Chinese market. Your task is to translate English subtitles into concise, natural, and high-impact simplified Chinese, suitable for a male self-improvement channel on Bilibili.
+- Tone: Confident, direct, insightful, using modern and engaging language. Avoid overly academic or literal "translation-ese."
+- Style: Use short, powerful sentences. Adapt cultural references and idioms to be easily understood by a Chinese audience.
+- Rules: Translate the user's input. Do not add any extra commentary, explanations, or text outside of the direct translation.`,
 			},
 			{
 				Role:    openai.ChatMessageRoleUser,
