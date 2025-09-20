@@ -4,6 +4,7 @@ builds:
   - env:
       - CGO_ENABLED=0
     main: ./cmd/server/main.go
+    binary: KlicStudio
     goos:
       - darwin
       - linux
