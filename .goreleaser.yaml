@@ -3,11 +3,17 @@ version: 2
 builds:
   - env:
       - CGO_ENABLED=0
+    main: ./cmd/server/main.go
     goos:
       - darwin
       - linux
       - windows
-    main: ./cmd/server/main.go
+    goarch:
+      - amd64
+      - arm64
+    ignore:
+      - goos: windows
+        goarch: arm64
 
 # Docker 构建配置
 dockers:
