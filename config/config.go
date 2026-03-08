@@ -32,9 +32,10 @@ type Server struct {
 }
 
 type OpenaiCompatibleConfig struct {
-	BaseUrl string `toml:"base_url"`
-	ApiKey  string `toml:"api_key"`
-	Model   string `toml:"model"`
+	BaseUrl      string `toml:"base_url"`
+	ApiKey       string `toml:"api_key"`
+	Model        string `toml:"model"`
+	SystemPrompt string `toml:"system_prompt"`
 }
 
 type LocalModelConfig struct {
