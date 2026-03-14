@@ -269,10 +269,16 @@ func createLlmConfigGroup() *fyne.Container {
 	modelEntry := StyledEntry("模型名称 Model name")
 	modelEntry.Bind(binding.BindString(&config.Conf.Llm.Model))
 
+	systemPromptEntry := widget.NewMultiLineEntry()
+	systemPromptEntry.SetPlaceHolder("自定义系统提示词，留空使用默认值 Custom system prompt, leave empty for default")
+	systemPromptEntry.SetMinRowsVisible(3)
+	systemPromptEntry.Bind(binding.BindString(&config.Conf.Llm.SystemPrompt))
+
 	form := widget.NewForm(
 		widget.NewFormItem("API Base URL", baseUrlEntry),
 		widget.NewFormItem("API Key", apiKeyEntry),
 		widget.NewFormItem("模型名称 Model name", modelEntry),
+		widget.NewFormItem("系统提示词 System Prompt", systemPromptEntry),
 	)
 	return GlassmorphismCard("LLM 配置 LLM Config", "LLM配置 LLM config", form, GetCurrentThemeIsDark())
 }
