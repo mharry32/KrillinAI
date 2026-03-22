@@ -2,6 +2,8 @@ package whisperkit
 
 import (
 	"encoding/json"
+	"fmt"
+	"krillin-ai/config"
 	"krillin-ai/internal/storage"
 	"krillin-ai/internal/types"
 	"krillin-ai/log"
@@ -14,9 +16,25 @@ import (
 )
 
 func (c *WhisperKitProcessor) Transcription(audioFile, language, workDir string) (*types.TranscriptionData, error) {
-	cmdArgs := []string{
-		"transcribe",
-		"--model-path", "./models/whisperkit/openai_whisper-large-v2",
+	model := config.Conf.Transcribe.Whisperkit.Model
+	modelPath := fmt.Sprintf("./models/whisperkit/openai_whisper-%s", model)
+
+	var cmdArgs []string
+	if _, err := os.Stat(modelPath); err == nil {
+		// 本地已有模型目录，直接使用 --model-path
+		cmdArgs = []string{
+			"transcribe",
+			"--model-path", modelPath,
+		}
+	} else {
+		// 本地没有模型，用 --model 让 whisperkit-cli 自动从 HuggingFace 下载
+		log.GetLogger().Info("本地whisperkit模型不存在，whisperkit-cli将自动下载", zap.String("model", model))
+		cmdArgs = []string{
+			"transcribe",
+			"--model", model,
+		}
+	}
+	cmdArgs = append(cmdArgs,
 		"--audio-encoder-compute-units", "all",
 		"--text-decoder-compute-units", "all",
 		"--language", language,
@@ -25,7 +43,7 @@ func (c *WhisperKitProcessor) Transcription(audioFile, language, workDir string)
 		"--word-timestamps",
 		"--skip-special-tokens",
 		"--audio-path", audioFile,
-	}
+	)
 	cmd := exec.Command(storage.WhisperKitPath, cmdArgs...)
 	log.GetLogger().Info("WhisperKitProcessor转录开始", zap.String("cmd", cmd.String()))
 	output, err := cmd.CombinedOutput()

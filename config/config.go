@@ -116,13 +116,13 @@ var Conf = Config{
 			Model: "whisper-1",
 		},
 		Fasterwhisper: LocalModelConfig{
-			Model: "large-v2",
+			Model: "large-v3",
 		},
 		Whisperkit: LocalModelConfig{
-			Model: "large-v2",
+			Model: "large-v3",
 		},
 		Whispercpp: LocalModelConfig{
-			Model: "large-v2",
+			Model: "large-v3",
 		},
 	},
 	Tts: Tts{
@@ -142,24 +142,24 @@ func validateConfig() error {
 			return errors.New("使用OpenAI转录服务需要配置 OpenAI API Key")
 		}
 	case "fasterwhisper":
-		if Conf.Transcribe.Fasterwhisper.Model != "tiny" && Conf.Transcribe.Fasterwhisper.Model != "medium" && Conf.Transcribe.Fasterwhisper.Model != "large-v2" {
-			return errors.New("检测到开启了fasterwhisper，但模型选型配置不正确，请检查配置")
+		if Conf.Transcribe.Fasterwhisper.Model == "" {
+			return errors.New("检测到开启了fasterwhisper，但未配置模型名，请在配置文件中设置 transcribe.fasterwhisper.model")
 		}
 	case "whisperkit":
 		if runtime.GOOS != "darwin" {
 			log.GetLogger().Error("whisperkit只支持macos", zap.String("当前系统", runtime.GOOS))
 			return fmt.Errorf("whisperkit只支持macos")
 		}
-		if Conf.Transcribe.Whisperkit.Model != "large-v2" {
-			return errors.New("检测到开启了whisperkit，但模型选型配置不正确，请检查配置")
+		if Conf.Transcribe.Whisperkit.Model == "" {
+			return errors.New("检测到开启了whisperkit，但未配置模型名，请在配置文件中设置 transcribe.whisperkit.model")
 		}
 	case "whispercpp":
-		if runtime.GOOS != "windows" { // 当前先仅支持win，模型仅支持large-v2，最小化产品
+		if runtime.GOOS != "windows" { // 当前先仅支持win
 			log.GetLogger().Error("whispercpp only support windows", zap.String("current os", runtime.GOOS))
 			return fmt.Errorf("whispercpp only support windows")
 		}
-		if Conf.Transcribe.Whispercpp.Model != "large-v2" {
-			return errors.New("检测到开启了whisper.cpp，但模型选型配置不正确，请检查配置")
+		if Conf.Transcribe.Whispercpp.Model == "" {
+			return errors.New("检测到开启了whisper.cpp，但未配置模型名，请在配置文件中设置 transcribe.whispercpp.model")
 		}
 	case "aliyun":
 		if Conf.Transcribe.Aliyun.Speech.AccessKeyId == "" || Conf.Transcribe.Aliyun.Speech.AccessKeySecret == "" || Conf.Transcribe.Aliyun.Speech.AppKey == "" {

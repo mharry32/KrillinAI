@@ -541,19 +541,7 @@ func checkModel(whisperType string) error {
 		modelPath = fmt.Sprintf("./models/whisperkit/openai_whisper-%s", model)
 		files, _ := os.ReadDir(modelPath)
 		if len(files) == 0 {
-			log.GetLogger().Info("没有找到whisperkit模型，即将开始自动下载")
-			downloadUrl := "https://modelscope.cn/models/Maranello/KrillinAI_dependency_cn/resolve/master/whisperkit-large-v2.zip"
-			err = util.DownloadFile(downloadUrl, "./models/whisperkit/openai_whisper-large-v2.zip", config.Conf.App.Proxy)
-			if err != nil {
-				log.GetLogger().Info("下载whisperkit模型失败", zap.Error(err))
-				return err
-			}
-			err = util.Unzip("./models/whisperkit/openai_whisper-large-v2.zip", "./models/whisperkit/")
-			if err != nil {
-				log.GetLogger().Error("解压whisperkit模型失败", zap.Error(err))
-				return err
-			}
-			log.GetLogger().Info("whisperkit模型下载完成", zap.String("路径", modelPath))
+			log.GetLogger().Info("没有找到whisperkit模型，转录时将由 whisperkit-cli 自动下载", zap.String("model", model))
 		}
 	}
 
